@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -151,6 +152,189 @@ void Ascend_Descend()
     }
 }
 
+void Buscar_dato()
+{
+    if (primero == NULL)
+    {
+        cout << "\n Pila vacía, no se puede buscar ningún dato. " << endl;
+        return;
+    }
+
+    int datoBuscado, posicion = 0;
+    bool encontrado = false;
+    cout << "\n Ingrese el dato a buscar: ";
+    cin >> datoBuscado;
+
+    auxiliar = primero;
+    while (auxiliar != NULL)
+    {
+        if (auxiliar->valor == datoBuscado)
+        {
+            cout << "\n Dato encontrado en la posición: " << posicion << endl;
+            encontrado = true;
+        }
+        auxiliar = auxiliar->dir_sig;
+        posicion++;
+    }
+
+    if (!encontrado)
+    {
+        cout << "\n El dato no se encuentra en la pila." << endl;
+    }
+}
+void Modificar_dato()
+{
+    if (primero == NULL)
+    {
+        cout << "\n Pila vacía, no se puede modificar ningún dato. " << endl;
+        return;
+    }
+
+    int datoBuscado, nuevoValor;
+    bool encontrado = false;
+    cout << "\n Ingrese el dato a buscar para modificar: ";
+    cin >> datoBuscado;
+
+    auxiliar = primero;
+    while (auxiliar != NULL)
+    {
+        if (auxiliar->valor == datoBuscado)
+        {
+            cout << "\n Dato encontrado. Ingrese el nuevo valor: ";
+            cin >> nuevoValor;
+            auxiliar->valor = nuevoValor;
+            cout << "\n Dato modificado con éxito." << endl;
+            encontrado = true;
+            break;
+        }
+        auxiliar = auxiliar->dir_sig;
+    }
+
+    if (!encontrado)
+    {
+        cout << "\n El dato no se encuentra en la pila." << endl;
+    }
+}
+void Eliminar_dato()
+{
+    if (primero == NULL)
+    {
+        cout << "\n Pila vacía, no se puede eliminar ningún dato. " << endl;
+        return;
+    }
+
+    int datoBuscado;
+    bool encontrado = false;
+    cout << "\n Ingrese el dato a buscar para eliminar: ";
+    cin >> datoBuscado;
+
+    auxiliar = primero;
+    Pilas *anterior = NULL;
+
+    while (auxiliar != NULL)
+    {
+        if (auxiliar->valor == datoBuscado)
+        {
+            if (anterior == NULL) // Si el nodo a eliminar es el primero
+            {
+                primero = auxiliar->dir_sig;
+            }
+            else
+            {
+                anterior->dir_sig = auxiliar->dir_sig;
+            }
+            delete auxiliar;
+            cout << "\n Dato eliminado con éxito." << endl;
+            encontrado = true;
+            break;
+        }
+        anterior = auxiliar;
+        auxiliar = auxiliar->dir_sig;
+    }
+
+    if (!encontrado)
+    {
+        cout << "\n El dato no se encuentra en la pila." << endl;
+    }
+}
+
+#include <map> // Para el cálculo de la moda
+
+void Sumar_Aumentar()
+{
+    if (primero == NULL)
+    {
+        cout << "\n Pila vacía, no se puede realizar la suma." << endl;
+        return;
+    }
+
+    int suma = 0;
+    auxiliar = primero;
+
+    while (auxiliar != NULL)
+    {
+        suma += auxiliar->valor;
+        auxiliar = auxiliar->dir_sig;
+    }
+
+    float sumaAumentada = suma * 2.5; // Incrementa el 150% (1 + 1.5 = 2.5)
+
+    cout << "\n El resultado de la suma de los datos de la pila es: " << suma;
+    cout << "\n La suma aumentada en un 150% es: " << sumaAumentada << endl;
+}
+
+void Promedio_Moda()
+{
+    if (primero == NULL)
+    {
+        cout << "\n Pila vacía, no se puede calcular el promedio ni la moda." << endl;
+        return;
+    }
+
+    int suma = 0, cantidad = 0;
+    map<int, int> frecuencias; // Mapa para calcular la frecuencia de cada valor
+    auxiliar = primero;
+
+    // Calcular suma, cantidad de elementos, y frecuencias de cada valor
+    while (auxiliar != NULL)
+    {
+        suma += auxiliar->valor;
+        frecuencias[auxiliar->valor]++;
+        cantidad++;
+        auxiliar = auxiliar->dir_sig;
+    }
+
+    // Calcular el promedio
+    float promedio = static_cast<float>(suma) / cantidad;
+    cout << "\n El resultado del promedio de los datos de la pila es: " << promedio;
+
+    // Encontrar la moda
+    int moda = 0, maxFrecuencia = 0;
+    bool hayModa = false;
+    for (const auto &par : frecuencias)
+    {
+        if (par.second > maxFrecuencia)
+        {
+            moda = par.first;
+            maxFrecuencia = par.second;
+            hayModa = true;
+        }
+        else if (par.second == maxFrecuencia)
+        {
+            hayModa = false; // No hay moda si múltiples valores tienen la misma frecuencia máxima
+        }
+    }
+
+    if (hayModa && maxFrecuencia > 1)
+    {
+        cout << "\n El resultado de la moda de los datos de la pila es: " << moda << endl;
+    }
+    else
+    {
+        cout << "\n En la pila no se repite ningún dato." << endl;
+    }
+}
+
 int main()
 {
     int opc;
@@ -166,29 +350,40 @@ int main()
         cout << "\n          6.  Eliminar un dato específico  \n";
         cout << "\n          7.  Mostrar Dato Mayor y Menor de la pila     \n";
         cout << "\n          8.  Ordenar Ascendente y Descendentemente la pila     \n";
-        cout << "\n          9. Sumar y aumentar datos de la pila     \n";
-        cout << "\n          10.Promedio y Moda de la pila     \n";
-        cout << "\n          11.  Salir     \n";
+        cout << "\n          9.  Sumar y aumentar datos de la pila     \n";
+        cout << "\n          10. Promedio y Moda de la pila     \n";
+        cout << "\n          11. Salir     \n";
         cout << "\n    Ingresa la opcion: ";
         cin >> opc;
 
         switch (opc)
         {
         case 1:
-            system("pause");
             Insertar();
+            system("pause");
             break;
 
         case 2:
-            system("pause");
             Eliminar();
+            system("pause");
             break;
 
         case 3:
-            system("pause");
             Mostrar();
+            system("pause");
             break;
-
+        case 4:
+            Buscar_dato();
+            system("pause");
+            break;
+        case 5:
+            Modificar_dato();
+            system("pause");
+            break;
+        case 6:
+            Eliminar_dato();
+            system("pause");
+            break;
         case 7:
             Mayor_Menor();
             system("pause");
@@ -198,7 +393,14 @@ int main()
             Ascend_Descend();
             system("pause");
             break;
-
+        case 9:
+            Sumar_Aumentar();
+            system("pause");
+            break;
+        case 10:
+            Promedio_Moda();
+            system("pause");
+            break;
         case 11:
             exit(EXIT_SUCCESS);
             system("pause");
@@ -211,5 +413,5 @@ int main()
 
         system("cls");
 
-    } while (opc <= 6);
+    } while (opc <= 11);
 }
